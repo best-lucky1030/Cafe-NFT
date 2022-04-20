@@ -50,7 +50,7 @@ const Header = () => {
         {
           currentAccount &&
           <Navbar.Text>
-            Balance: {balance}ETH
+            Balance: {balance} ETH
           </Navbar.Text>
         }
       </Container>

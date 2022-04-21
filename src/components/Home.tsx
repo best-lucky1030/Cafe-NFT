@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import Header from './Header'
 import { buyNFT, getMaxSupply, getTotalSupply } from '../network/ethereum'
+import { useWallet } from './hooks/useWallet'
 
 const Home = () => {
-
+  const { currentAccount, setCurrentAccount } = useWallet()
   const [totalSupply, setTotalSupply] = useState<number | null>(null)
   const [maxSupply, setMaxSupply] = useState<number | null>(null)
 
@@ -15,6 +16,14 @@ const Home = () => {
     }
     fetchSupply()
   }, [])
+
+  const onBuyClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (!currentAccount) {
+      alert("You haven't connect your wallet yet!")
+    } else {
+      buyNFT()
+    }
+  }
 
   return (
     <div>
@@ -31,7 +40,7 @@ const Home = () => {
         <Row>
           <Col className='d-flex justify-content-center'>
             <Button variant='primary'
-              onClick={() => buyNFT()}
+              onClick={onBuyClick}
             >
               Buy now!
             </Button>

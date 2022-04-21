@@ -1,41 +1,26 @@
 import React, {useEffect, useState} from "react"
 import { Container, Navbar, Nav } from "react-bootstrap"
 import { getBalance } from "../network/ethereum"
+import { useWallet } from "./hooks/useWallet"
 
 const Header = () => {
-
-  const [currentAccount, setCurrentAccount] = useState(null)
-  const [balance, setBalance] = useState('0')
+  const { ethereum } = window
+  const { currentAccount, setCurrentAccount, balance, setBalance } = useWallet()
 
   const connectWallet = async () => {
-    const { ethereum } = window
-
     if (!ethereum) {
       console.log("No wallet plugin is available!")
-    } else {
-      console.log("Wallet exists!")
+      return
     }
 
     try {
-      const [account] = await ethereum.request({method: 'eth_requestAccounts'})
+      let account
+      [account] = await ethereum.request({method: 'eth_requestAccounts'})
       setCurrentAccount(account);
     } catch (err) {
       console.log(err)
     }
   }
-
-  useEffect(() => {
-    if (currentAccount) {
-      console.log(currentAccount)
-
-      const fetchBalance =async () => {
-        const balance = await getBalance(currentAccount!!)
-        setBalance(balance)
-      }
-
-      fetchBalance()
-    }
-  }, [currentAccount])
 
   return (
     <Navbar bg="light">
